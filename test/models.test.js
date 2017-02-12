@@ -17,7 +17,7 @@ describe('Models', ()=> {
         .catch( e => done(e));
     });
 
-    describe.only('seeded data', ()=> {
+    describe('seeded data', ()=> {
       it('there are 4 stories', ()=> {
         expect(stories.length).to.equal(4);
       });
