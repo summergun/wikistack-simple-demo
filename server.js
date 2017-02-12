@@ -13,7 +13,16 @@ app.get('/', (req, res, next)=> {
     include: [ db.models.User ]
   })
     .then( stories => res.render('index', { stories }))
-    .catch( e => console.log(e));
+    .catch( e => next(e));
+});
+
+app.get('/users/:name', (req, res, next)=> {
+  db.models.User.findOne({ 
+    where: { name: req.params.name },
+    include: [ db.models.Story ]
+  })
+    .then( user => res.render('user', { user: user } ))
+    .catch( e => next(e));
 });
 
 const port = process.env.PORT || 3000;
