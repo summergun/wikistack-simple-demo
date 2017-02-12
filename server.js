@@ -9,7 +9,11 @@ app.set('view engine', 'html');
 app.engine('html', swig.renderFile);
 
 app.get('/', (req, res, next)=> {
-  res.render('index');
+  db.models.Story.findAll({
+    include: [ db.models.User ]
+  })
+    .then( stories => res.render('index', { stories }))
+    .catch( e => console.log(e));
 });
 
 const port = process.env.PORT || 3000;

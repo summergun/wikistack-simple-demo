@@ -1,5 +1,21 @@
 <html>
   <body>
-    Helllo
+    <ul>
+      {% for story in stories %}
+        <li>
+          <a href='/stories/{{ story.title }}'>
+            {{ story.title }}
+          </a>
+          <br />
+          by
+          <a href='/users/{{ story.user.name }}'>
+            {{ story.user.name }}
+          </a>
+          <div>
+            {{ story.summary }}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
   </body>
 </html>
