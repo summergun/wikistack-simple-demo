@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:dev": "DATABASE_URL=postgres://localhost/wikistack_simple_demo_test nodemon ./node_modules/mocha/bin/mocha", 
     "start:dev": "DATABASE_URL=postgres://localhost/wikistack_simple_demo nodemon server"
   },
   "keywords": [],
@@ -16,5 +16,9 @@
     "pg": "^6.1.2",
     "sequelize": "^3.30.2",
     "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   }
 }
