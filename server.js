@@ -16,6 +16,25 @@ app.get('/', (req, res, next)=> {
     .catch( e => next(e));
 });
 
+app.get('/stories/:title', (req, res, next)=> {
+  let story;
+  db.models.Story.findOne({ 
+    where: { title: req.params.title },
+    include: [ db.models.User ]
+  })
+    .then( _story => {
+        story = _story;
+        return db.models.Story.findAll({
+          where: { 
+            userId: story.userId,
+            id: { $ne: story.id }
+          }
+        });
+    })
+    .then( stories => res.render('story', { story, stories }))
+    .catch( e => next(e));
+});
+
 app.get('/users/:name', (req, res, next)=> {
   db.models.User.findOne({ 
     where: { name: req.params.name },
