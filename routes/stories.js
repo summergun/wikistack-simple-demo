@@ -9,9 +9,17 @@ app.post('/', (req, res, next)=> {
       if(user) return user;
       return db.models.User.create({ name: req.body.name });
     })
-    .then( user => db.models.Story.create( { title: req.body.title, content: req.body.content, userId: user.id}))
+    .then( user => db.models.Story.create( { title: req.body.title, content: req.body.content, userId: user.id, tags: req.body.tags.split(',')}))
     .then( story => res.redirect('/'))
     .catch( e => next(e));
+});
+
+app.get('/tag/:tag', (req, res, next)=> {
+  db.models.Story.findAll({
+    where: { tags: { $contains: [ req.params.tag ]}}, 
+    include: [ db.models.User] })
+  .then( stories => res.render('tag', { tag: req.params.tag, stories}))
+  .catch( e => next(e));
 });
 
 app.get('/:title', (req, res, next)=> {
