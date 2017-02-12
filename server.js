@@ -4,6 +4,7 @@ const swig = require('swig');
 swig.setDefaults({ cache: false });
 
 const app = express();
+app.use(require('body-parser').urlencoded({ extended: false }));
 
 app.set('view engine', 'html');
 app.engine('html', swig.renderFile);
@@ -13,6 +14,17 @@ app.get('/', (req, res, next)=> {
     include: [ db.models.User ]
   })
     .then( stories => res.render('index', { stories }))
+    .catch( e => next(e));
+});
+
+app.post('/stories', (req, res, next)=> {
+  db.models.User.findOne({ where: { name: req.body.name }})
+    .then( user => {
+      if(user) return user;
+      return db.models.User.create({ name: req.body.name });
+    })
+    .then( user => db.models.Story.create( { title: req.body.title, content: req.body.content, userId: user.id}))
+    .then( story => res.redirect('/'))
     .catch( e => next(e));
 });
 
@@ -42,6 +54,11 @@ app.get('/users/:name', (req, res, next)=> {
   })
     .then( user => res.render('user', { user: user } ))
     .catch( e => next(e));
+});
+
+
+app.use(( err, req, res, next)=> {
+  res.send(err);
 });
 
 const port = process.env.PORT || 3000;
