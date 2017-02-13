@@ -1,15 +1,11 @@
 const app = require('express').Router();
 const db = require('../db');
 
+
 module.exports = app;
 
 app.post('/', (req, res, next)=> {
-  db.models.User.findOne({ where: { name: req.body.name }})
-    .then( user => {
-      if(user) return user;
-      return db.models.User.create({ name: req.body.name });
-    })
-    .then( user => db.models.Story.create( { title: req.body.title, content: req.body.content, userId: user.id, tags: req.body.tags.split(',')}))
+    db.models.Story.createStory(req.params.name,req.body.title, req.body.content, req.body.tags)
     .then( story => res.redirect('/'))
     .catch( e => next(e));
 });
